@@ -1,0 +1,232 @@
+nelmio_api_doc:
+    documentation:
+        # Titre de la documentation
+        title: 'API Documentation'
+        # Version de l'API
+        version: '1.0.0'
+        # Description de l'API
+        description: 'API for managing users and blog articles.'
+        # Fournisseur de votre API
+        contact:
+            name: 'Your Name'
+            email: 'youremail@example.com'
+        # Définition des chemins d'API
+        paths:
+            # Documentation pour la création d'un utilisateur
+            /api/user:
+                post:
+                    summary: 'Create a new user'
+                    description: 'This endpoint allows you to create a new user.'
+                    requestBody:
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    type: object
+                                    properties:
+                                        email:
+                                            type: string
+                                            example: 'user@example.com'
+                                        plainPassword:
+                                            type: string
+                                            example: 'securepassword'
+                    responses:
+                        '201':
+                            description: 'User created successfully'
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            message:
+                                                type: string
+                                                example: 'User created successfully'
+                                            user:
+                                                type: object
+                                                properties:
+                                                    email:
+                                                        type: string
+                                                        example: 'user@example.com'
+                        '400':
+                            description: 'Invalid data'
+                        '500':
+                            description: 'User could not be created'
+
+            # Documentation pour la création d'un article de blog
+            /blog/articles:
+                post:
+                    summary: 'Create a new blog article'
+                    description: 'This endpoint allows you to create a new blog article.'
+                    requestBody:
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    type: object
+                                    properties:
+                                        title:
+                                            type: string
+                                            example: 'My First Blog Article'
+                                        content:
+                                            type: string
+                                            example: 'This is the content of my first blog article.'
+                                        publicationDate:
+                                            type: string
+                                            format: date-time
+                                            example: '2024-01-01T00:00:00Z'
+                                        keywords:
+                                            type: array
+                                            items:
+                                                type: string
+                                            example: ['keyword1', 'keyword2']
+                                        status:
+                                            type: string
+                                            enum: ['draft', 'published', 'deleted']
+                                            example: 'draft'
+                                        slug:
+                                            type: string
+                                            example: 'my-first-blog-article'
+                                        coverPictureRef:
+                                            type: string
+                                            example: 'path/to/cover_picture.jpg'
+                    responses:
+                        '201':
+                            description: 'Blog article created successfully'
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/BlogArticle'
+                        '400':
+                            description: 'Invalid input data'
+
+            # Documentation pour obtenir tous les articles de blog
+            /blog/articles:
+                get:
+                    summary: 'Retrieve all blog articles'
+                    description: 'This endpoint allows you to retrieve all blog articles.'
+                    responses:
+                        '200':
+                            description: 'List of blog articles'
+                            content:
+                                application/json:
+                                    schema:
+                                        type: array
+                                        items:
+                                            $ref: '#/components/schemas/BlogArticle'
+
+            # Documentation pour obtenir un article de blog spécifique
+            /blog/articles/{id}:
+                get:
+                    summary: 'Retrieve a blog article'
+                    description: 'This endpoint allows you to retrieve a specific blog article by ID.'
+                    parameters:
+                        - in: path
+                          name: id
+                          required: true
+                          description: 'ID of the blog article to retrieve'
+                          schema:
+                              type: integer
+                              example: 1
+                    responses:
+                        '200':
+                            description: 'Blog article retrieved successfully'
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/BlogArticle'
+                        '404':
+                            description: 'Article not found'
+
+            # Documentation pour mettre à jour un article de blog
+            /blog/articles/{id}:
+                patch:
+                    summary: 'Update a blog article'
+                    description: 'This endpoint allows you to update an existing blog article.'
+                    parameters:
+                        - in: path
+                          name: id
+                          required: true
+                          description: 'ID of the blog article to update'
+                          schema:
+                              type: integer
+                              example: 1
+                    requestBody:
+                        required: true
+                        content:
+                            application/json:
+                                schema:
+                                    type: object
+                                    properties:
+                                        title:
+                                            type: string
+                                        content:
+                                            type: string
+                                        keywords:
+                                            type: array
+                                            items:
+                                                type: string
+                                        status:
+                                            type: string
+                                            enum: ['draft', 'published', 'deleted']
+                                        slug:
+                                            type: string
+                                        coverPictureRef:
+                                            type: string
+                    responses:
+                        '200':
+                            description: 'Blog article updated successfully'
+                            content:
+                                application/json:
+                                    schema:
+                                        $ref: '#/components/schemas/BlogArticle'
+                        '404':
+                            description: 'Article not found'
+                        '400':
+                            description: 'Invalid input data'
+
+            # Documentation pour supprimer un article de blog
+            /blog/articles/{id}:
+                delete:
+                    summary: 'Delete a blog article'
+                    description: 'This endpoint allows you to delete an existing blog article.'
+                    parameters:
+                        - in: path
+                          name: id
+                          required: true
+                          description: 'ID of the blog article to delete'
+                          schema:
+                              type: integer
+                              example: 1
+                    responses:
+                        '204':
+                            description: 'Article deleted successfully'
+                        '404':
+                            description: 'Article not found'
+
+    components:
+        schemas:
+            BlogArticle:
+                type: object
+                properties:
+                    AuthorId:
+                        type: integer
+                    title:
+                        type: string
+                    content:
+                        type: string
+                    publicationDate:
+                        type: string
+                        format: date-time
+                    creationDate:
+                        type: string
+                        format: date-time
+                    keywords:
+                        type: array
+                        items:
+                            type: string
+                    status:
+                        type: string
+                    slug:
+                        type: string
+                    coverPictureRef:
+                        type: string
